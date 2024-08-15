@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capitalize tool By Shahabas</title>
+    <meta name="description" content="This tool will help to capitalize your text in a second.">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col justify-center items-center">
+
+    <form action="/submit" method="post" class="main w-full max-w-lg p-4 bg-gray-800 rounded-lg shadow-lg">
+        <h1 class="text-2xl mb-4">Text Capitalizer</h1>
+        <textarea name="stringData" class="w-full h-40 p-2 mb-4 bg-gray-700 text-white" placeholder="Enter your text here...">
+            <% if(getText){ %>
+                <%= getText %>
+            <% } %>
+        </textarea>
+        <div class="errorText text-red-500 mb-4">
+            <% if(errorText){ %>
+                <%= errorText %>
+            <% } %>
+        </div>
+        <input class="submit bg-white text-black py-2 px-4 rounded hover:bg-gray-200 cursor-pointer" type="submit" value="Submit">
+    </form>
+
+    <div class="output mt-8 w-full max-w-lg">
+        <div id="dataText" class="box bg-gray-800 p-4 rounded-lg shadow-lg mb-4">
+            <% if(dataString){ %>
+                <%= dataString %>
+            <% } %>
+        </div>
+        <button onclick="copyContent();" class="copy bg-white text-black py-2 px-4 rounded hover:bg-gray-200 cursor-pointer">Copy Text</button>
+    </div>
+
+    <script type="text/javascript">
+        async function copyContent(){
+            let dataText = document.getElementById("dataText").innerText;
+            try {
+                await navigator.clipboard.writeText(dataText);
+                console.log("Text Copied!!")
+            } catch (err) {
+                console.log("Failed to copy: " + err);
+            }
+        }
+    </script>
+</body>
+</html>
