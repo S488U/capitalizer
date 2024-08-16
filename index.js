@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
 app.post("/submit", (req, res) => {
   if (req.body.stringData === null || req.body.stringData === "") {
     res.render("index.ejs", {
-        errorText: "Enter something to capitalize",
+      errorText: "Enter something to capitalize",
     });
   } else {
     let input = req.body.stringData;
@@ -42,9 +42,9 @@ app.post("/submit", (req, res) => {
     const result = capitalize(input);
 
     res.render("index.ejs", {
-        getText : input,
-        dataString : result,
-        errorText : ""
+      getText : input,
+      dataString : result,
+      errorText : ""
     });
   }
 });
