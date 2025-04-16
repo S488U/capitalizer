@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-black text-white">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Text Capitalizer</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    ::selection {
+      background-color: #6b46c1;
+      /* Accent purple color */
+      color: white;
+    }
+
+    /* Notification styles */
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #6b46c1;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      display: none;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Scrollbar styles */
+    ::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background-color: #2d2d2d;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #6b46c1;
+      /* Accent purple color */
+      border-radius: 10px;
+      border: 3px solid #2d2d2d;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #5a34b0;
+      /* Darker purple for hover effect */
+    }
+  </style>
+</head>
+
+<body class="h-full flex flex-col items-center justify-between p-4">
+  <!-- Main content -->
+  <div class="flex flex-col items-center justify-center flex-grow w-full max-w-lg mx-auto space-y-4">
+    <h1 class="text-3xl font-bold text-center text-white">Text Capitalizer</h1>
+
+    <textarea id="data"
+      class="w-full h-40 p-4 rounded-xl bg-gray-900 text-white placeholder-gray-500 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-600 resize-none"
+      placeholder="Enter your text here..."></textarea>
+
+    <button onclick="copy()"
+      class="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-700 transition duration-200 font-semibold text-white shadow-lg">
+      Capitalize
+    </button>
+
+    <p id="demo"
+      class="w-full min-h-[3rem] p-4 bg-gray-800 rounded-xl text-purple-300 font-mono border border-gray-700 text-center cursor-pointer"
+      onclick="copyToClipboard()">
+      Capitalized text will appear here 😄
+    </p>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w-full py-4 text-center text-gray-500 flex justify-center items-center space-x-4">
+    <span>Made by Sabbu</span>
+    <a href="https://github.com/S488U" target="_blank" aria-label="GitHub" class="hover:text-white">
+      <svg fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
+        <path
+          d="M12 0.297C5.37 0.297 0 5.667 0 12.297c0 5.297 3.438 9.8 8.205 11.387.6.113.82-.26.82-.577v-2.172c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.088-.745.083-.729.083-.729 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.81 1.305 3.495.997.108-.775.418-1.305.76-1.605-2.665-.304-5.466-1.334-5.466-5.93 0-1.31.47-2.38 1.236-3.22-.124-.303-.535-1.523.117-3.176 0 0 1.008-.322 3.3 1.23a11.49 11.49 0 013.003-.403c1.02.005 2.045.138 3.003.403 2.29-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.873.118 3.176.77.84 1.234 1.91 1.234 3.22 0 4.61-2.803 5.624-5.475 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.217.694.825.576C20.565 22.092 24 17.59 24 12.297c0-6.63-5.373-12-12-12" />
+      </svg>
+    </a>
+
+    <!-- About Link -->
+    <a href="/about" class="text-purple-600 hover:text-white font-semibold transition duration-200">
+      About
+    </a>
+  </footer>
+
+  <!-- Notification box -->
+  <div id="notification" class="notification">
+    Copied to clipboard!
+  </div>
+
+  <script>
+    function copy() {
+      const data = document.getElementById("data").value;
+
+      if (data.trim() === "") {
+        document.getElementById("demo").innerText = "Please type something before clicking the button!";
+        document.getElementById("demo").classList.add("text-red-500");
+        return;
+      }
+
+      fetch("/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ stringData: data }),
+      })
+        .then(response => response.json())
+        .then(item => {
+          document.getElementById("demo").innerText = item.data;
+          document.getElementById("demo").classList.remove("text-red-500");
+        })
+        .catch(err => {
+          console.error(`Error: ${err}`);
+        });
+    }
+
+    function copyToClipboard() {
+      const output = document.getElementById("demo").innerText;
+      if (output !== "Capitalized text will appear here 😄" && output !== "Please type something before clicking the button!") {
+        navigator.clipboard.writeText(output)
+          .then(() => {
+            showNotification();
+          })
+          .catch(err => {
+            console.error("Error copying text: ", err);
+          });
+      }
+    }
+
+    function showNotification() {
+      const notification = document.getElementById("notification");
+      notification.style.display = "block";
+
+      setTimeout(() => {
+        notification.style.display = "none";
+      }, 3000); // Hide the notification after 3 seconds
+    }
+  </script>
+</body>
+
+</html>

@@ -1,7 +1,11 @@
 ## To run the Web App.
 
-clone the repository
+### clone the repository and run these cmmands inside the cloned repository.
 
-`npm install`
+```bash
+npm install
+```
 
-`npm start`
+```bash
+npm start
+```
